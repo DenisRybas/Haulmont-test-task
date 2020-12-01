@@ -77,32 +77,34 @@ public class PatientWindow extends Window {
 
         okButton = new Button("OK");
 
-        content.addComponents(name, surname, patronymic, phoneNumber, okButton, cancelButton);
+        content.addComponents(name, surname, patronymic, phoneNumber,
+                okButton, cancelButton);
         this.setContent(content);
     }
 
     private void createListeners() {
         cancelButton.addClickListener(event -> close());
         okButton.addClickListener(event -> {
-                    if (binder.isValid()) {
-                        Patient patient = new Patient(name.getValue(), surname.getValue(),
-                                patronymic.getValue(), phoneNumber.getValue());
-                        PatientDao patientDao = new PatientDao();
-                        if (mode == CreateUpdate.CREATE) {
-                            patientDao.save(patient);
-                            patientsList.addPatient(patient);
-                        } else {
-                            Patient patientToUpd = patientsList.getSelectedTableItem();
-                            patientDao.update(patientToUpd, patient);
-                            patientToUpd.setName(patient.getName());
-                            patientToUpd.setSurname(patient.getSurname());
-                            patientToUpd.setPatronymic(patient.getPatronymic());
-                            patientToUpd.setPhoneNumber(patient.getPhoneNumber());
-                        }
-                        patientsList.refreshTable();
-                        close();
-                    }
+            if (binder.isValid()) {
+                Patient patient = new Patient(name.getValue(),
+                        surname.getValue(),
+                        patronymic.getValue(), phoneNumber.getValue());
+                PatientDao patientDao = new PatientDao();
+                if (mode == CreateUpdate.CREATE) {
+                    patientDao.save(patient);
+                    patientsList.addPatient(patient);
+                } else {
+                    Patient patientToUpd = patientsList
+                            .getSelectedTableItem();
+                    patientDao.update(patientToUpd, patient);
+                    patientToUpd.setName(patient.getName());
+                    patientToUpd.setSurname(patient.getSurname());
+                    patientToUpd.setPatronymic(patient.getPatronymic());
+                    patientToUpd.setPhoneNumber(patient.getPhoneNumber());
                 }
-        );
+                patientsList.refreshTable();
+                close();
+            }
+        });
     }
 }

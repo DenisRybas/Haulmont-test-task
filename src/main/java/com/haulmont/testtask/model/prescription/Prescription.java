@@ -3,12 +3,10 @@ package com.haulmont.testtask.model.prescription;
 import com.haulmont.testtask.model.doctor.Doctor;
 import com.haulmont.testtask.model.patient.Patient;
 import com.haulmont.testtask.view.prescription.PrescriptionPriority;
-
 import java.sql.Date;
 
-
 public class Prescription {
-    private Long id; //TODO: Long
+    private Long id;
     private String description;
     private Patient patient;
     private Doctor doctor;
@@ -17,7 +15,9 @@ public class Prescription {
     private PrescriptionPriority priority;
 
 
-    public Prescription(String description, Patient patient, Doctor doctor, Date dateCreated, Date expirationDate, PrescriptionPriority priority) {
+    public Prescription(String description, Patient patient, Doctor doctor,
+                        Date dateCreated, Date expirationDate,
+                        PrescriptionPriority priority) {
         this.description = description;
         this.patient = patient;
         this.doctor = doctor;
@@ -87,6 +87,6 @@ public class Prescription {
 
     @Override
     public String toString() {
-        return "Prescription [id=" + id + ", description=" + description + "]";
+        return "Prescription [id=" + id + ", description=" + description + "]";//TODO: TOSTRING
     }
 }

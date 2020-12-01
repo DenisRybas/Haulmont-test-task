@@ -5,7 +5,8 @@ import com.vaadin.ui.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainMenuViewImpl extends HorizontalLayout implements MainMenuView, Button.ClickListener {
+public class MainMenuViewImpl extends HorizontalLayout
+        implements MainMenuView, Button.ClickListener {
     private List<MainMenuViewListener> listeners;
 
     public MainMenuViewImpl() {
@@ -33,6 +34,7 @@ public class MainMenuViewImpl extends HorizontalLayout implements MainMenuView, 
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
         for (MainMenuViewListener listener : listeners)
-            listener.buttonClick((MainMenuButtons) clickEvent.getButton().getData());
+            listener.buttonClick((MainMenuButtons) clickEvent.getButton()
+                    .getData());
     }
 }

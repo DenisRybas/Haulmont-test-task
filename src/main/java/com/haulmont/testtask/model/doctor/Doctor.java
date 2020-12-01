@@ -1,6 +1,5 @@
 package com.haulmont.testtask.model.doctor;
 
-
 public class Doctor {
 
     private Long id;
@@ -9,7 +8,8 @@ public class Doctor {
     private String patronymic;
     private String specialization;
 
-    public Doctor(String name, String surname, String patronymic, String specialization) {
+    public Doctor(String name, String surname, String patronymic,
+                  String specialization) {
         this.name = name;
         this.surname = surname;
         this.patronymic = patronymic;
@@ -61,6 +61,7 @@ public class Doctor {
 
     @Override
     public String toString() {
-        return "Patient [id=" + id + ", name=" + name + ", surname=" + surname + ", specialization=" + specialization + "]";
+        return "Patient [id=" + id + ", name=" + name + ", surname=" +
+                surname + ", specialization=" + specialization + "]"; //TODO: TOSTRING
     }
 }

@@ -2,7 +2,6 @@ package com.haulmont.testtask.view.doctor;
 
 import com.haulmont.testtask.model.doctor.Doctor;
 import com.haulmont.testtask.model.prescription.PrescriptionDao;
-
 import com.vaadin.ui.*;
 
 import java.util.*;
@@ -34,7 +33,8 @@ public class DoctorStatisticsWindow extends Window {
         table.addColumn(Doctor::getName).setCaption("Name");
         table.addColumn(Doctor::getSurname).setCaption("Surname");
         table.addColumn(Doctor::getPatronymic).setCaption("Patronymic");
-        table.addColumn(doctor -> doctors.get(doctor)).setCaption("Quantity of prescriptions");
+        table.addColumn(doctor -> doctors.get(doctor))
+                .setCaption("Quantity of prescriptions");
 
         table.setItems(List.copyOf(doctors.keySet()));
         layout.addComponent(table);

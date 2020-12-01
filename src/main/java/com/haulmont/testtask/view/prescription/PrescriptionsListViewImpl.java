@@ -1,6 +1,5 @@
 package com.haulmont.testtask.view.prescription;
 
-import com.haulmont.testtask.model.patient.Patient;
 import com.haulmont.testtask.model.prescription.Prescription;
 import com.haulmont.testtask.model.prescription.PrescriptionDao;
 import com.vaadin.data.provider.DataProvider;
@@ -10,7 +9,8 @@ import com.vaadin.ui.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class PrescriptionsListViewImpl extends Window implements PrescriptionsListView, Button.ClickListener {
+public class PrescriptionsListViewImpl extends Window
+        implements PrescriptionsListView, Button.ClickListener {
     private List<PrescriptionsListViewListener> listeners;
     private VerticalLayout layout;
     private Grid<Prescription> table;
@@ -39,13 +39,20 @@ public class PrescriptionsListViewImpl extends Window implements PrescriptionsLi
         this.setContent(layout);
         this.setSizeFull();
 
-        table.addColumn(Prescription::getId).setCaption("Id");
-        table.addColumn(Prescription::getDescription).setCaption("Description");
-        table.addColumn(prescription -> prescription.getPatient().getId()).setCaption("Patient");
-        table.addColumn(prescription -> prescription.getDoctor().getId()).setCaption("Doctor");
-        table.addColumn(Prescription::getPriority).setCaption("Priority");
-        table.addColumn(Prescription::getDateCreated).setCaption("Date created");
-        table.addColumn(Prescription::getExpirationDate).setCaption("Expiration Date");
+        table.addColumn(Prescription::getId)
+                .setCaption("Id");
+        table.addColumn(Prescription::getDescription)
+                .setCaption("Description");
+        table.addColumn(prescription -> prescription.getPatient().getId())
+                .setCaption("Patient");
+        table.addColumn(prescription -> prescription.getDoctor().getId())
+                .setCaption("Doctor");
+        table.addColumn(Prescription::getPriority)
+                .setCaption("Priority");
+        table.addColumn(Prescription::getDateCreated)
+                .setCaption("Date created");
+        table.addColumn(Prescription::getExpirationDate)
+                .setCaption("Expiration Date");
 
         prescriptions = prescriptionDao.getAll();
         setDefaultDataProvider();
@@ -67,12 +74,14 @@ public class PrescriptionsListViewImpl extends Window implements PrescriptionsLi
         descriptionFilter.setDescription("Description");
 
         patientFilter = new ComboBox<>();
+        patientFilter.setTextInputAllowed(false);
         patientFilter.setDescription("Patient");
         patientFilter.setItems(prescriptions.stream()
                 .map(p -> p.getPatient().getId())
                 .collect(Collectors.toSet()));
 
         priorityFilter = new ComboBox<>();
+        patientFilter.setTextInputAllowed(false);
         priorityFilter.setDescription("Priority");
         priorityFilter.setItems(prescriptions.stream()
                 .map(Prescription::getPriority)
@@ -99,7 +108,8 @@ public class PrescriptionsListViewImpl extends Window implements PrescriptionsLi
                         filteredPrescriptions.add(prescription);
                     }
                 }
-                ListDataProvider<Prescription> dataProvider = DataProvider.ofCollection(filteredPrescriptions);
+                ListDataProvider<Prescription> dataProvider = DataProvider
+                        .ofCollection(filteredPrescriptions);
                 table.setDataProvider(dataProvider);
                 buttons.forEach((k, v) -> v.setEnabled(false));
             } else {
@@ -117,7 +127,8 @@ public class PrescriptionsListViewImpl extends Window implements PrescriptionsLi
                         filteredPrescriptions.add(prescription);
                     }
                 }
-                ListDataProvider<Prescription> dataProvider = DataProvider.ofCollection(filteredPrescriptions);
+                ListDataProvider<Prescription> dataProvider = DataProvider
+                        .ofCollection(filteredPrescriptions);
                 table.setDataProvider(dataProvider);
                 buttons.forEach((k, v) -> v.setEnabled(false));
             } else {
@@ -135,7 +146,8 @@ public class PrescriptionsListViewImpl extends Window implements PrescriptionsLi
                         filteredPrescriptions.add(prescription);
                     }
                 }
-                ListDataProvider<Prescription> dataProvider = DataProvider.ofCollection(filteredPrescriptions);
+                ListDataProvider<Prescription> dataProvider = DataProvider
+                        .ofCollection(filteredPrescriptions);
                 table.setDataProvider(dataProvider);
                 buttons.forEach((k, v) -> v.setEnabled(false));
             } else {
@@ -159,23 +171,26 @@ public class PrescriptionsListViewImpl extends Window implements PrescriptionsLi
     private void disableDeleteUpdate() {
         for (Map.Entry<PrescriptionListButtons, Button> entry
                 : buttons.entrySet()) {
-            entry.getValue().setEnabled(entry.getKey() != PrescriptionListButtons.UPDATE
-                    && entry.getKey() != PrescriptionListButtons.REMOVE);
+            if (entry.getKey() != PrescriptionListButtons.UPDATE
+                    && entry.getKey() != PrescriptionListButtons.REMOVE) {
+                entry.getValue().setEnabled(true);
+            }
         }
     }
 
     private void setDefaultDataProvider() {
-        ListDataProvider<Prescription> dataProvider = DataProvider.ofCollection(prescriptions);
+        ListDataProvider<Prescription> dataProvider = DataProvider
+                .ofCollection(prescriptions);
         table.setDataProvider(dataProvider);
         table.setItems(prescriptions);
     }
 
-    public Prescription getSelectedTableItem() {
-        return table.asSingleSelect().getValue();
-    }
-
     public void refreshTable() {
         table.getDataProvider().refreshAll();
+    }
+
+    public Prescription getSelectedTableItem() {
+        return table.asSingleSelect().getValue();
     }
 
     public void addPrescription(Prescription prescription) {
@@ -194,6 +209,7 @@ public class PrescriptionsListViewImpl extends Window implements PrescriptionsLi
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
         for (PrescriptionsListViewListener listener : listeners)
-            listener.buttonClick((PrescriptionListButtons) clickEvent.getButton().getData());
+            listener.buttonClick((PrescriptionListButtons) clickEvent
+                    .getButton().getData());
     }
 }

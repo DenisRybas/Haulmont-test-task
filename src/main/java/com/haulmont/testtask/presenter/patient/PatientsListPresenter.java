@@ -5,16 +5,11 @@ import com.haulmont.testtask.model.exception.PrescriptionAvailabilityException;
 import com.haulmont.testtask.model.patient.Patient;
 import com.haulmont.testtask.view.doctor.CreateUpdate;
 import com.haulmont.testtask.model.patient.PatientDao;
-import com.haulmont.testtask.view.patient.PatientListButtons;
-import com.haulmont.testtask.view.patient.PatientWindow;
-import com.haulmont.testtask.view.patient.PatientsListView;
-import com.haulmont.testtask.view.patient.PatientsListViewImpl;
+import com.haulmont.testtask.view.patient.*;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 
-import java.sql.SQLException;
-
-public class PatientsListPresenter implements PatientsListView.PatientsListViewListener {
+public class PatientsListPresenter implements PatientsListViewListener {
     private PatientDao model;
     private PatientsListViewImpl view;
 
@@ -36,10 +31,12 @@ public class PatientsListPresenter implements PatientsListView.PatientsListViewL
     public void buttonClick(PatientListButtons nameOfButton) {
         switch (nameOfButton) {
             case ADD:
-                MainUI.getCurrent().addWindow(new PatientWindow(view, CreateUpdate.CREATE));
+                MainUI.getCurrent().addWindow(new PatientWindow(view,
+                        CreateUpdate.CREATE));
                 break;
             case UPDATE:
-                MainUI.getCurrent().addWindow(new PatientWindow(view, CreateUpdate.UPDATE));
+                MainUI.getCurrent().addWindow(new PatientWindow(view,
+                        CreateUpdate.UPDATE));
                 break;
             case REMOVE:
                 try {
@@ -48,8 +45,10 @@ public class PatientsListPresenter implements PatientsListView.PatientsListViewL
                     view.removePatient(patient);
                     view.refreshTable();
                 } catch (PrescriptionAvailabilityException e) {
-                    Notification notification = new Notification("Warning", "The patient has got recipes. " +
-                            "Deletion is not allowed",  Notification.Type.WARNING_MESSAGE);
+                    Notification notification = new Notification("Warning",
+                            "The patient has got recipes. " +
+                                    "Deletion is not allowed",
+                            Notification.Type.WARNING_MESSAGE);
                     notification.setDelayMsec(3000);
                     notification.show(Page.getCurrent());
                 }

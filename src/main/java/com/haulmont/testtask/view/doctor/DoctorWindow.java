@@ -51,7 +51,8 @@ public class DoctorWindow extends Window {
 
         specialization = new TextField("Specialization");
         specialization.setRequiredIndicatorVisible(true);
-        binder.forField(specialization).asRequired("Doctor must have a specialization")
+        binder.forField(specialization)
+                .asRequired("Doctor must have a specialization")
                 .withValidator(specialization -> specialization.length() < 30,
                         "Specialization must have less than 30 characters")
                 .withValidator(name -> Pattern.matches("[a-zA-Z]+",
@@ -71,7 +72,8 @@ public class DoctorWindow extends Window {
 
         cancelButton = new Button("OK");
 
-        content.addComponents(name, surname, patronymic, specialization, okButton, cancelButton);
+        content.addComponents(name, surname, patronymic, specialization,
+                okButton, cancelButton);
         this.setContent(content);
     }
 

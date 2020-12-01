@@ -16,7 +16,10 @@ public class PrescriptionAvailabilityException extends Throwable {
         super(cause);
     }
 
-    public PrescriptionAvailabilityException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public PrescriptionAvailabilityException(String message,
+                                             Throwable cause,
+                                             boolean enableSuppression,
+                                             boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

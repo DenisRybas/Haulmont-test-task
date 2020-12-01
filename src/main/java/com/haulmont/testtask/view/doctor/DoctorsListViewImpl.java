@@ -11,7 +11,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DoctorsListViewImpl extends Window implements DoctorsListView, Button.ClickListener {
+public class DoctorsListViewImpl extends Window implements DoctorsListView,
+        Button.ClickListener {
     private List<DoctorsListViewListener> listeners;
     private VerticalLayout layout;
     private Grid<Doctor> table;
@@ -72,6 +73,7 @@ public class DoctorsListViewImpl extends Window implements DoctorsListView, Butt
             }
         });
     }
+
     public Doctor getSelectedTableItem() {
         return table.asSingleSelect().getValue();
     }
@@ -96,6 +98,7 @@ public class DoctorsListViewImpl extends Window implements DoctorsListView, Butt
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
         for (DoctorsListViewListener listener : listeners)
-            listener.buttonClick((DoctorListButtons) clickEvent.getButton().getData());
+            listener.buttonClick((DoctorListButtons) clickEvent.getButton()
+                    .getData());
     }
 }

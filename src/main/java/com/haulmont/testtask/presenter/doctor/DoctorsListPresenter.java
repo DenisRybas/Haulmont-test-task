@@ -4,12 +4,11 @@ import com.haulmont.testtask.MainUI;
 import com.haulmont.testtask.model.doctor.Doctor;
 import com.haulmont.testtask.model.doctor.DoctorDao;
 import com.haulmont.testtask.model.exception.PrescriptionAvailabilityException;
-import com.haulmont.testtask.model.patient.Patient;
 import com.haulmont.testtask.view.doctor.*;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 
-public class DoctorsListPresenter implements DoctorsListView.DoctorsListViewListener {
+public class DoctorsListPresenter implements DoctorsListViewListener {
     private DoctorDao model;
     private DoctorsListViewImpl view;
 
@@ -31,10 +30,12 @@ public class DoctorsListPresenter implements DoctorsListView.DoctorsListViewList
     public void buttonClick(DoctorListButtons nameOfButton) {
         switch (nameOfButton) {
             case ADD:
-                MainUI.getCurrent().addWindow(new DoctorWindow(view, CreateUpdate.CREATE));
+                MainUI.getCurrent().addWindow(new DoctorWindow(view,
+                        CreateUpdate.CREATE));
                 break;
             case UPDATE:
-                MainUI.getCurrent().addWindow(new DoctorWindow(view, CreateUpdate.UPDATE));
+                MainUI.getCurrent().addWindow(new DoctorWindow(view,
+                        CreateUpdate.UPDATE));
                 break;
             case REMOVE:
                 try {
@@ -43,8 +44,11 @@ public class DoctorsListPresenter implements DoctorsListView.DoctorsListViewList
                     view.removeDoctor(doctor);
                     view.refreshTable();
                 } catch (PrescriptionAvailabilityException e) {
-                    Notification notification = new Notification("Warning", "The patient has got recipes. " +
-                            "Deletion is not allowed",  Notification.Type.WARNING_MESSAGE);
+                    Notification notification =
+                            new Notification("Warning",
+                                    "The patient has got recipes. " +
+                                            "Deletion is not allowed",
+                                    Notification.Type.WARNING_MESSAGE);
                     notification.setDelayMsec(3000);
                     notification.show(Page.getCurrent());
                 }

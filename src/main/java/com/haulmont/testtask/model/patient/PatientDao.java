@@ -13,7 +13,8 @@ public class PatientDao implements Dao<Patient> {
     public Patient get(Long id) {
         String sql = "SELECT * FROM Patient WHERE id = ?;";
         Patient patient = new Patient();
-        try (PreparedStatement statement = ConnectionUtil.getConnection().prepareStatement(sql)) {
+        try (PreparedStatement statement = ConnectionUtil.getConnection()
+                .prepareStatement(sql)) {
 
             statement.setLong(1, id);
 
@@ -35,7 +36,8 @@ public class PatientDao implements Dao<Patient> {
     public List<Patient> getAll() {
         String sql = "SELECT * FROM Patient;";
         List<Patient> list = new ArrayList<>();
-        try (PreparedStatement statement = ConnectionUtil.getConnection().prepareStatement(sql)) {
+        try (PreparedStatement statement = ConnectionUtil.getConnection()
+                .prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Patient patient = new Patient();
@@ -56,7 +58,8 @@ public class PatientDao implements Dao<Patient> {
     public void save(Patient patient) {
         String sql = "INSERT INTO Patient(name, surname, patronymic, phone_number)"
                 + "VALUES(?, ?, ?, ?)";
-        try (PreparedStatement statement = ConnectionUtil.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement statement = ConnectionUtil.getConnection()
+                .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, patient.getName());
             statement.setString(2, patient.getSurname());
             statement.setString(3, patient.getPatronymic());
@@ -65,9 +68,9 @@ public class PatientDao implements Dao<Patient> {
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     patient.setId(generatedKeys.getLong(1));
-                }
-                else {
-                    throw new SQLException("Creating patient failed, no ID obtained.");
+                } else {
+                    throw new SQLException("Creating patient failed, " +
+                            "no ID obtained.");
                 }
             }
         } catch (SQLException e) {
@@ -77,9 +80,10 @@ public class PatientDao implements Dao<Patient> {
 
     @Override
     public void update(Patient oldPatient, Patient newPatient) {
-        String sql = "UPDATE Patient set name = ?, surname = ?, patronymic = ?, phone_number = ?"
-                + "where id = ?";
-        try (PreparedStatement statement = ConnectionUtil.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        String sql = "UPDATE Patient set name = ?, surname = ?, patronymic = ?, " +
+                "phone_number = ? where id = ?";
+        try (PreparedStatement statement = ConnectionUtil.getConnection()
+                .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, newPatient.getName());
             statement.setString(2, newPatient.getSurname());
             statement.setString(3, newPatient.getPatronymic());
@@ -94,7 +98,8 @@ public class PatientDao implements Dao<Patient> {
     @Override
     public void delete(Patient patient) throws PrescriptionAvailabilityException {
         String sql = "DELETE FROM Patient where id = ?;";
-        try (PreparedStatement st = ConnectionUtil.getConnection().prepareStatement(sql)) {
+        try (PreparedStatement st = ConnectionUtil.getConnection()
+                .prepareStatement(sql)) {
             st.setLong(1, patient.getId());
             st.executeUpdate();
         } catch (SQLException e) {

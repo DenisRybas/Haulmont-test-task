@@ -1,13 +1,14 @@
 package com.haulmont.testtask.model.patient;
 
 public class Patient {
-    private Long id; //TODO: Long
+    private Long id;
     private String name;
     private String surname;
     private String patronymic;
     private String phoneNumber;
 
-    public Patient(String name, String surname, String patronymic, String phoneNumber) {
+    public Patient(String name, String surname, String patronymic,
+                   String phoneNumber) {
         this.name = name;
         this.surname = surname;
         this.patronymic = patronymic;
@@ -29,9 +30,7 @@ public class Patient {
         this.surname = surname;
     }
 
-    public void setPatronymic(String patronymic) {
-        this.patronymic = patronymic;
-    }
+    public void setPatronymic(String patronymic) {this.patronymic = patronymic;}
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;

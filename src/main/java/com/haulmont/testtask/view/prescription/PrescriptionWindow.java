@@ -28,7 +28,8 @@ public class PrescriptionWindow extends Window {
     private PatientDao patientDao;
     private DoctorDao doctorDao;
 
-    public PrescriptionWindow(PrescriptionsListViewImpl prescriptionsList, CreateUpdate mode) {
+    public PrescriptionWindow(PrescriptionsListViewImpl
+                                      prescriptionsList, CreateUpdate mode) {
         this.prescriptionsList = prescriptionsList;
         this.mode = mode;
         patientDao = new PatientDao();
@@ -41,7 +42,8 @@ public class PrescriptionWindow extends Window {
         HorizontalLayout content = new HorizontalLayout();
         binder = new Binder<>(Prescription.class);
         description = new TextField("Description");
-        binder.forField(description).asRequired("Prescription must have a description")
+        binder.forField(description)
+                .asRequired("Prescription must have a description")
                 .withValidator(description -> description.length() < 100,
                         "Description must have less than 100 characters")
                 .bind(Prescription::getDescription, Prescription::setDescription);
@@ -50,33 +52,40 @@ public class PrescriptionWindow extends Window {
                 map(Patient::getId).collect(Collectors.toList());
         patientComboBox = new ComboBox<>("Patient");
         patientComboBox.setItems(patientIds);
-        binder.forField(patientComboBox).asRequired("Prescription must have a patient");
+        binder.forField(patientComboBox)
+                .asRequired("Prescription must have a patient");
         patientComboBox.setTextInputAllowed(false);
 
         List<Long> doctorIds = doctorDao.getAll().stream().
                 map(Doctor::getId).collect(Collectors.toList());
         doctorComboBox = new ComboBox<>("Doctor");
         doctorComboBox.setItems(doctorIds);
-        binder.forField(doctorComboBox).asRequired("Prescription must have a doctor");
+        binder.forField(doctorComboBox)
+                .asRequired("Prescription must have a doctor");
         doctorComboBox.setTextInputAllowed(false);
 
         priorityComboBox = new ComboBox<>();
         priorityComboBox.setTextInputAllowed(false);
-        binder.forField(priorityComboBox).asRequired("Prescription must have a priority");
-        priorityComboBox.setDataProvider(new ListDataProvider<>(Arrays.asList(PrescriptionPriority.values())));
+        binder.forField(priorityComboBox)
+                .asRequired("Prescription must have a priority");
+        priorityComboBox.setDataProvider(new ListDataProvider<>(
+                Arrays.asList(PrescriptionPriority.values())));
         priorityComboBox.setCaption("Priority");
 
         dateCreated = new DateField();
         dateCreated.setCaption("Date created");
         dateCreated.setValue(LocalDate.now());
-        binder.forField(dateCreated).asRequired("Prescription must have a creation date");
+        binder.forField(dateCreated)
+                .asRequired("Prescription must have a creation date");
 
         expirationDate = new DateField();
         expirationDate.setCaption("Expiration date");
         expirationDate.setRangeStart(dateCreated.getValue());
         dateCreated.setRangeEnd(expirationDate.getValue());
-        expirationDate.addValueChangeListener(event -> dateCreated.setRangeEnd(expirationDate.getValue()));
-        dateCreated.addValueChangeListener(event -> expirationDate.setRangeStart(dateCreated.getValue()));
+        expirationDate.addValueChangeListener(event ->
+                dateCreated.setRangeEnd(expirationDate.getValue()));
+        dateCreated.addValueChangeListener(event ->
+                expirationDate.setRangeStart(dateCreated.getValue()));
 
         if (mode == CreateUpdate.UPDATE) {
             Prescription selectedItem = prescriptionsList.getSelectedTableItem();
@@ -92,14 +101,17 @@ public class PrescriptionWindow extends Window {
 
         cancelButton = new Button("Cancel");
 
-        content.addComponents(description, patientComboBox, doctorComboBox, priorityComboBox, dateCreated, expirationDate, okButton, cancelButton);
+        content.addComponents(description, patientComboBox, doctorComboBox,
+                priorityComboBox, dateCreated, expirationDate, okButton,
+                cancelButton);
         this.setContent(content);
     }
 
     private void createListeners() {
         okButton.addClickListener(e -> {
             if (binder.isValid()) {
-                Prescription prescription = new Prescription(description.getValue(),
+                Prescription prescription = new Prescription(
+                        description.getValue(),
                         patientDao.get(patientComboBox.getValue()),
                         doctorDao.get(doctorComboBox.getValue()),
                         java.sql.Date.valueOf(dateCreated.getValue()),
@@ -110,15 +122,23 @@ public class PrescriptionWindow extends Window {
                     prescriptionDao.save(prescription);
                     prescriptionsList.addPrescription(prescription);
                 } else {
-                    Prescription prescriptionToUpd = prescriptionsList.getSelectedTableItem();
+                    Prescription prescriptionToUpd = prescriptionsList
+                            .getSelectedTableItem();
 
-                    prescriptionDao.update(prescriptionToUpd, prescription);
-                    prescriptionToUpd.setDescription(prescription.getDescription());
-                    prescriptionToUpd.setPatient(prescription.getPatient());
-                    prescriptionToUpd.setDoctor(prescription.getDoctor());
-                    prescriptionToUpd.setDateCreated(prescription.getDateCreated());
-                    prescriptionToUpd.setExpirationDate(prescription.getExpirationDate());
-                    prescriptionToUpd.setPriority(prescription.getPriority());
+                    prescriptionDao.update(prescriptionToUpd,
+                            prescription);
+                    prescriptionToUpd.setDescription(
+                            prescription.getDescription());
+                    prescriptionToUpd.setPatient(
+                            prescription.getPatient());
+                    prescriptionToUpd.setDoctor(
+                            prescription.getDoctor());
+                    prescriptionToUpd.setDateCreated(
+                            prescription.getDateCreated());
+                    prescriptionToUpd.setExpirationDate(
+                            prescription.getExpirationDate());
+                    prescriptionToUpd.setPriority(
+                            prescription.getPriority());
                 }
                 prescriptionsList.refreshTable();
                 close();
