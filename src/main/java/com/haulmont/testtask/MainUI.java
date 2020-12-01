@@ -1,5 +1,7 @@
 package com.haulmont.testtask;
 
+import com.haulmont.testtask.presenter.mainMenu.MainMenuPresenter;
+import com.haulmont.testtask.view.mainMenu.MainMenuViewImpl;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
@@ -14,8 +16,8 @@ public class MainUI extends UI {
         layout.setSizeFull();
         layout.setMargin(true);
 
-        layout.addComponent(new Label("Main UI"));
-
+        var mainMenu = new MainMenuPresenter(new MainMenuViewImpl());
+        layout.addComponent(mainMenu.getView());
         setContent(layout);
     }
 }
