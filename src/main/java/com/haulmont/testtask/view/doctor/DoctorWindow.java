@@ -4,10 +4,7 @@ import com.haulmont.testtask.model.doctor.Doctor;
 import com.haulmont.testtask.model.doctor.DoctorDao;
 import com.haulmont.testtask.view.CreateUpdate;
 import com.vaadin.data.Binder;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.*;
 
 import java.util.regex.Pattern;
 
@@ -86,6 +83,7 @@ public class DoctorWindow extends Window {
      * Создаёт компоненты для окна создания/изменения доктора
      */
     private void createComponents() {
+        this.setResizable(false);
         HorizontalLayout content = new HorizontalLayout();
         binder = new Binder<>(Doctor.class);
 
@@ -131,10 +129,12 @@ public class DoctorWindow extends Window {
 
         okButton = new Button("OK");
 
-        cancelButton = new Button("OK");
+        cancelButton = new Button("Cancel");
 
         content.addComponents(name, surname, patronymic, specialization,
                 okButton, cancelButton);
+        content.setComponentAlignment(cancelButton, Alignment.BOTTOM_CENTER);
+        content.setComponentAlignment(okButton, Alignment.BOTTOM_CENTER);
         this.setContent(content);
     }
 

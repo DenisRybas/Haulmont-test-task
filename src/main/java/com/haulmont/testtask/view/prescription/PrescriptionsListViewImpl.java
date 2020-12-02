@@ -137,7 +137,7 @@ public class PrescriptionsListViewImpl extends Window
                 .collect(Collectors.toSet()));
 
         priorityFilter = new ComboBox<>();
-        patientFilter.setTextInputAllowed(false);
+        priorityFilter.setTextInputAllowed(false);
         priorityFilter.setDescription("Priority");
         priorityFilter.setItems(prescriptions.stream()
                 .map(Prescription::getPriority)

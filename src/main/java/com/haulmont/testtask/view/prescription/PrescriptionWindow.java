@@ -120,6 +120,7 @@ public class PrescriptionWindow extends Window {
      * Создаёт компоненты для окна создания/изменения рецепта
      */
     private void createComponents() {
+        this.setResizable(false);
         HorizontalLayout content = new HorizontalLayout();
         binder = new Binder<>(Prescription.class);
         description = new TextField("Description");
@@ -185,6 +186,8 @@ public class PrescriptionWindow extends Window {
         content.addComponents(description, patientComboBox, doctorComboBox,
                 priorityComboBox, dateCreated, expirationDate, okButton,
                 cancelButton);
+        content.setComponentAlignment(cancelButton, Alignment.BOTTOM_CENTER);
+        content.setComponentAlignment(okButton, Alignment.BOTTOM_CENTER);
         this.setContent(content);
     }
 

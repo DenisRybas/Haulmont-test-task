@@ -4,10 +4,7 @@ import com.haulmont.testtask.view.CreateUpdate;
 import com.haulmont.testtask.model.patient.PatientDao;
 import com.haulmont.testtask.model.patient.Patient;
 import com.vaadin.data.Binder;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.Window;
+import com.vaadin.ui.*;
 
 import java.util.regex.Pattern;
 
@@ -86,6 +83,7 @@ public class PatientWindow extends Window {
      * Создаёт компоненты для окна создания/изменения пациента
      */
     private void createComponents() {
+        this.setResizable(false);
         HorizontalLayout content = new HorizontalLayout();
         binder = new Binder<>(Patient.class);
 
@@ -139,6 +137,8 @@ public class PatientWindow extends Window {
 
         content.addComponents(name, surname, patronymic, phoneNumber,
                 okButton, cancelButton);
+        content.setComponentAlignment(cancelButton, Alignment.BOTTOM_CENTER);
+        content.setComponentAlignment(okButton, Alignment.BOTTOM_CENTER);
         this.setContent(content);
     }
 
