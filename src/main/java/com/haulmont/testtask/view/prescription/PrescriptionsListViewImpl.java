@@ -233,6 +233,8 @@ public class PrescriptionsListViewImpl extends Window
             if (entry.getKey() != PrescriptionListButtons.UPDATE
                     && entry.getKey() != PrescriptionListButtons.REMOVE) {
                 entry.getValue().setEnabled(true);
+            } else {
+                entry.getValue().setEnabled(false);
             }
         }
     }
