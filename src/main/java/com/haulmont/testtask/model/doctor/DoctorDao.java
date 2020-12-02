@@ -8,7 +8,22 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс, реализующий CRUD - методы для сущности {@link Doctor},
+ * нужен для общения с БД
+ *
+ * @see Doctor
+ */
 public class DoctorDao implements Dao<Doctor> {
+
+    /**
+     * Метод для получения доктора из БД по его id. Если отлавливается
+     * SQLException, то в консоль выводится его сообщение
+     *
+     * @param id - уникальный идентификатор доктора
+     * @return возвращает доктора, полученного из БД по id
+     * @see SQLException
+     */
     @Override
     public Doctor get(Long id) {
         String sql = "SELECT * FROM Doctor WHERE id = ?;";
@@ -24,13 +39,22 @@ public class DoctorDao implements Dao<Doctor> {
             doctor.setName(resultSet.getString("name"));
             doctor.setSurname(resultSet.getString("surname"));
             doctor.setPatronymic(resultSet.getString("patronymic"));
-            doctor.setSpecialization(resultSet.getString("specialization"));
+            doctor.setSpecialization(resultSet
+                    .getString("specialization"));
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
         return doctor;
     }
 
+    /**
+     * Метод для получения всех докторов из БД. Если отлавливается
+     * SQLException, то в консоль выводится его сообщение
+     *
+     * @return возвращает List докторов, полученных из БД
+     * @see List
+     * @see SQLException
+     */
     @Override
     public List<Doctor> getAll() {
         String sql = "SELECT * FROM Doctor;";
@@ -55,6 +79,13 @@ public class DoctorDao implements Dao<Doctor> {
         return list;
     }
 
+    /**
+     * Метод для сохранения доктора в БД. Если отлавливается
+     * SQLException, то в консоль выводится его сообщение
+     *
+     * @param doctor - доктор для сохранения
+     * @see SQLException
+     */
     @Override
     public void save(Doctor doctor) {
         String sql = "INSERT INTO Doctor(name, surname, patronymic, " +
@@ -81,6 +112,16 @@ public class DoctorDao implements Dao<Doctor> {
         }
     }
 
+    /**
+     * Метод для обновления уже существующего в
+     * БД доктора. Если отлавливается SQLException,
+     * то в консоль выводится его сообщение
+     *
+     * @param oldDoctor - доктор, который будет обновлён
+     * @param newDoctor - доктор, который нужен
+     *                  для обновления oldDoctor
+     * @see SQLException
+     */
     @Override
     public void update(Doctor oldDoctor, Doctor newDoctor) {
         String sql = "UPDATE Doctor set name = ?, surname = ?, " +
@@ -99,6 +140,22 @@ public class DoctorDao implements Dao<Doctor> {
         }
     }
 
+    /**
+     * Метод для удаления доктора из БД. Если отлавливается
+     * SQLException и его причиной было удаление доктора, у которого есть
+     * {@link com.haulmont.testtask.model.prescription.Prescription},
+     * то пробрасывается {@link PrescriptionAvailabilityException}
+     *
+     * @param doctor - доктор, который будет удалён из БД
+     * @throws PrescriptionAvailabilityException - исключение, сигнализирующее
+     *                                           о том, что доктор,
+     *                                           которого пользователь
+     *                                           хочет удалить из бд,
+     *                                           имеет рецепты
+     * @see SQLException
+     * @see PrescriptionAvailabilityException
+     * @see com.haulmont.testtask.model.prescription.Prescription
+     */
     @Override
     public void delete(Doctor doctor) throws PrescriptionAvailabilityException {
         String sql = "DELETE FROM Doctor where id = ?;";

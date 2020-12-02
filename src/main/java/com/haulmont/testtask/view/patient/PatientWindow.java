@@ -1,6 +1,6 @@
 package com.haulmont.testtask.view.patient;
 
-import com.haulmont.testtask.view.doctor.CreateUpdate;
+import com.haulmont.testtask.view.CreateUpdate;
 import com.haulmont.testtask.model.patient.PatientDao;
 import com.haulmont.testtask.model.patient.Patient;
 import com.vaadin.data.Binder;
@@ -11,20 +11,80 @@ import com.vaadin.ui.Window;
 
 import java.util.regex.Pattern;
 
+/**
+ * Окно создания/изменения пациента
+ *
+ * @see Patient
+ */
 public class PatientWindow extends Window {
-    private TextField name, surname, patronymic, phoneNumber;
+
+    /**
+     * TextField для имени пациента
+     */
+    private TextField name;
+
+    /**
+     * TextField для фамилии пациента
+     */
+    private TextField surname;
+
+    /**
+     * TextField для отчества пациента
+     */
+    private TextField patronymic;
+
+    /**
+     * TextField для номера телефона пациента
+     */
+    private TextField phoneNumber;
+
+    /**
+     * Binder для пациента, определяет валидность введённых данных
+     */
     private Binder<Patient> binder;
-    private Button okButton, cancelButton;
-    private PatientsListViewImpl patientsList;
+
+    /**
+     * Кнопка ОК
+     */
+    private Button okButton;
+
+    /**
+     * Кнопка отмены
+     */
+    private Button cancelButton;
+
+    /**
+     * View списка пациентов
+     *
+     * @see PatientsListViewImpl
+     */
+    private PatientsListViewImpl patientsListView;
+
+    /**
+     * Режим создания/изменения пациента
+     *
+     * @see CreateUpdate
+     */
     private CreateUpdate mode;
 
-    public PatientWindow(PatientsListViewImpl patientsList, CreateUpdate mode) {
-        this.patientsList = patientsList;
+    /**
+     * Конструктор для создания окна создания/изменения пациента
+     * Вызывает методы создания компонентов окна
+     * и создания Listener'ов для этих компонентов
+     *
+     * @param patientsListView - view списка пациентов
+     * @param mode             - режим создания/изменения пациента
+     */
+    public PatientWindow(PatientsListViewImpl patientsListView, CreateUpdate mode) {
+        this.patientsListView = patientsListView;
         this.mode = mode;
         createComponents();
         createListeners();
     }
 
+    /**
+     * Создаёт компоненты для окна создания/изменения пациента
+     */
     private void createComponents() {
         HorizontalLayout content = new HorizontalLayout();
         binder = new Binder<>(Patient.class);
@@ -66,7 +126,7 @@ public class PatientWindow extends Window {
                 .bind(Patient::getPhoneNumber, Patient::setPhoneNumber);
 
         if (mode == CreateUpdate.UPDATE) {
-            Patient patient = patientsList.getSelectedTableItem();
+            Patient patient = patientsListView.getSelectedTableItem();
             name.setValue(patient.getName());
             surname.setValue(patient.getSurname());
             patronymic.setValue(patient.getPatronymic());
@@ -82,6 +142,9 @@ public class PatientWindow extends Window {
         this.setContent(content);
     }
 
+    /**
+     * Создаёт Listener'ы для окна создания/изменения пациента
+     */
     private void createListeners() {
         cancelButton.addClickListener(event -> close());
         okButton.addClickListener(event -> {
@@ -92,9 +155,9 @@ public class PatientWindow extends Window {
                 PatientDao patientDao = new PatientDao();
                 if (mode == CreateUpdate.CREATE) {
                     patientDao.save(patient);
-                    patientsList.addPatient(patient);
+                    patientsListView.addPatient(patient);
                 } else {
-                    Patient patientToUpd = patientsList
+                    Patient patientToUpd = patientsListView
                             .getSelectedTableItem();
                     patientDao.update(patientToUpd, patient);
                     patientToUpd.setName(patient.getName());
@@ -102,7 +165,7 @@ public class PatientWindow extends Window {
                     patientToUpd.setPatronymic(patient.getPatronymic());
                     patientToUpd.setPhoneNumber(patient.getPhoneNumber());
                 }
-                patientsList.refreshTable();
+                patientsListView.refreshTable();
                 close();
             }
         });

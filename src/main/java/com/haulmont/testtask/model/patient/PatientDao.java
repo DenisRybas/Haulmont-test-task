@@ -8,7 +8,22 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс, реализующий CRUD - методы для сущности {@link Patient},
+ * нужен для общения с БД
+ *
+ * @see Patient
+ */
 public class PatientDao implements Dao<Patient> {
+
+    /**
+     * Метод для получения пациента из БД по его id. Если отлавливается
+     * SQLException, то в консоль выводится его сообщение
+     *
+     * @param id - уникальный идентификатор пациента
+     * @return возвращает пациента, полученного из БД по id
+     * @see SQLException
+     */
     @Override
     public Patient get(Long id) {
         String sql = "SELECT * FROM Patient WHERE id = ?;";
@@ -32,6 +47,14 @@ public class PatientDao implements Dao<Patient> {
         return patient;
     }
 
+    /**
+     * Метод для получения всех пациентов из БД. Если отлавливается
+     * SQLException, то в консоль выводится его сообщение
+     *
+     * @return возвращает {@link List} пациентов, полученных из БД
+     * @see List
+     * @see SQLException
+     */
     @Override
     public List<Patient> getAll() {
         String sql = "SELECT * FROM Patient;";
@@ -54,6 +77,13 @@ public class PatientDao implements Dao<Patient> {
         return list;
     }
 
+    /**
+     * Метод для сохранения пациента в БД. Если отлавливается
+     * SQLException, то в консоль выводится его сообщение
+     *
+     * @param patient - пациент для сохранения
+     * @see SQLException
+     */
     @Override
     public void save(Patient patient) {
         String sql = "INSERT INTO Patient(name, surname, patronymic, phone_number)"
@@ -78,6 +108,16 @@ public class PatientDao implements Dao<Patient> {
         }
     }
 
+    /**
+     * Метод для обновления уже существующего в
+     * БД пациента. Если отлавливается SQLException,
+     * то в консоль выводится его сообщение
+     *
+     * @param oldPatient - пациент, который будет обновлён
+     * @param newPatient - пациент, который нужен
+     *                   для обновления oldPatient
+     * @see SQLException
+     */
     @Override
     public void update(Patient oldPatient, Patient newPatient) {
         String sql = "UPDATE Patient set name = ?, surname = ?, patronymic = ?, " +
@@ -95,6 +135,22 @@ public class PatientDao implements Dao<Patient> {
         }
     }
 
+    /**
+     * Метод для удаления пациента из БД. Если отлавливается
+     * SQLException и его причиной было удаление пациента, у которого есть
+     * {@link com.haulmont.testtask.model.prescription.Prescription},
+     * то пробрасывается {@link PrescriptionAvailabilityException}
+     *
+     * @param patient - пациент, который будет удалён из БД
+     * @throws PrescriptionAvailabilityException - исключение, сигнализирующее
+     *                                           о том, что пациент,
+     *                                           которого пользователь
+     *                                           хочет удалить из бд,
+     *                                           имеет рецепты
+     * @see SQLException
+     * @see PrescriptionAvailabilityException
+     * @see com.haulmont.testtask.model.prescription.Prescription
+     */
     @Override
     public void delete(Patient patient) throws PrescriptionAvailabilityException {
         String sql = "DELETE FROM Patient where id = ?;";

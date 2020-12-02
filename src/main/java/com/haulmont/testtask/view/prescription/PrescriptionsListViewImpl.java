@@ -9,25 +9,81 @@ import com.vaadin.ui.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * View списка рецептов
+ *
+ * @see Prescription
+ */
 public class PrescriptionsListViewImpl extends Window
         implements PrescriptionsListView, Button.ClickListener {
+
+    /**
+     * Список {@link PrescriptionsListViewListener},
+     */
     private List<PrescriptionsListViewListener> listeners;
+
+    /**
+     * Основной layout для view списка рецептов
+     */
     private VerticalLayout layout;
+
+    /**
+     * Таблица, в которой находятся рецепты
+     */
     private Grid<Prescription> table;
+
+    /**
+     * Список рецептов
+     */
     private List<Prescription> prescriptions;
+
+    /**
+     * Словарь, связывающий {@link PrescriptionListButtons} - название кнопки
+     * и саму кнопку
+     */
     private Map<PrescriptionListButtons, Button> buttons;
+
+    /**
+     * TextField для фильтра списка рецептов по описанию
+     */
     private TextField descriptionFilter;
+
+    /**
+     * ComboBox для фильтра списка рецептов по
+     * {@link com.haulmont.testtask.model.patient.Patient}
+     *
+     * @see com.haulmont.testtask.model.patient.Patient
+     */
     private ComboBox<Long> patientFilter;
+
+    /**
+     * ComboBox для фильтра списка рецептов по {@link PrescriptionPriority}
+     *
+     * @see Prescription
+     */
     private ComboBox<PrescriptionPriority> priorityFilter;
+
+    /**
+     * Класс, реализующий CRUD - методы для сущности {@link Prescription},
+     *
+     * @see PrescriptionDao
+     */
     private PrescriptionDao prescriptionDao;
 
-
+    /**
+     * Пустой конструктор для создания view списка рецептов
+     * Вызывает методы создания компонентов view
+     * и создания Listener'ов для этих компонентов
+     */
     public PrescriptionsListViewImpl() {
         prescriptionDao = new PrescriptionDao();
         createComponents();
         createListeners();
     }
 
+    /**
+     * Создаёт компоненты для View
+     */
     private void createComponents() {
         layout = new VerticalLayout();
         table = new Grid<>();
@@ -97,6 +153,9 @@ public class PrescriptionsListViewImpl extends Window
         layout.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_CENTER);
     }
 
+    /**
+     * Создаёт Listener'ы для компонентов View
+     */
     private void createListeners() {
         listeners = new ArrayList<>();
         descriptionFilter.addValueChangeListener(event -> {

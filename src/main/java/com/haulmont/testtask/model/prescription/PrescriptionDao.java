@@ -3,6 +3,7 @@ package com.haulmont.testtask.model.prescription;
 import com.haulmont.testtask.model.Dao;
 import com.haulmont.testtask.model.doctor.Doctor;
 import com.haulmont.testtask.model.doctor.DoctorDao;
+import com.haulmont.testtask.model.exception.PrescriptionAvailabilityException;
 import com.haulmont.testtask.model.patient.PatientDao;
 import com.haulmont.testtask.util.ConnectionUtil;
 import com.haulmont.testtask.view.prescription.PrescriptionPriority;
@@ -10,8 +11,22 @@ import com.haulmont.testtask.view.prescription.PrescriptionPriority;
 import java.sql.*;
 import java.util.*;
 
+/**
+ * Класс, реализующий CRUD - методы для сущности {@link Prescription},
+ * нужен для общения с БД
+ *
+ * @see Prescription
+ */
 public class PrescriptionDao implements Dao<Prescription> {
 
+    /**
+     * Метод для получения рецепта из БД по его id. Если отлавливается
+     * SQLException, то в консоль выводится его сообщение
+     *
+     * @param id - уникальный идентификатор рецепта
+     * @return возвращает рецепт, полученного из БД по id
+     * @see SQLException
+     */
     @Override
     public Prescription get(Long id) {
         String sql = "SELECT * FROM prescription WHERE id = ?;";
@@ -46,6 +61,14 @@ public class PrescriptionDao implements Dao<Prescription> {
         return prescription;
     }
 
+    /**
+     * Метод для получения всех рецептов из БД. Если отлавливается
+     * SQLException, то в консоль выводится его сообщение
+     *
+     * @return возвращает List рецептов, полученных из БД
+     * @see List
+     * @see SQLException
+     */
     @Override
     public List<Prescription> getAll() {
         String sql = "SELECT * FROM prescription;";
@@ -79,6 +102,13 @@ public class PrescriptionDao implements Dao<Prescription> {
         return list;
     }
 
+    /**
+     * Метод для сохранения рецепта в БД. Если отлавливается
+     * SQLException, то в консоль выводится его сообщение
+     *
+     * @param prescription - рецепт для сохранения
+     * @see SQLException
+     */
     @Override
     public void save(Prescription prescription) {
         String sql = "INSERT INTO prescription(description, patient_id, " +
@@ -107,25 +137,35 @@ public class PrescriptionDao implements Dao<Prescription> {
         }
     }
 
+    /**
+     * Метод для обновления уже существующего в
+     * БД рецепта. Если отлавливается SQLException,
+     * то в консоль выводится его сообщение
+     *
+     * @param oldPrescription - рецепт, который будет обновлён
+     * @param newPrescription - рецепт, который нужен
+     *                        для обновления oldPrescription
+     * @see SQLException
+     */
     @Override
     public void update(Prescription oldPrescription,
-                       Prescription updatedPrescription) {
+                       Prescription newPrescription) {
         String sql = "UPDATE prescription set description = ?, patient_id = ?, " +
                 "doctor_id = ?, date_created = ?, expiration_date = ?, " +
                 "priority = ? where id = ?";
         try (PreparedStatement statement = ConnectionUtil.getConnection()
                 .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, updatedPrescription
+            statement.setString(1, newPrescription
                     .getDescription());
-            statement.setLong(2, updatedPrescription
+            statement.setLong(2, newPrescription
                     .getPatient().getId());
-            statement.setLong(3, updatedPrescription
+            statement.setLong(3, newPrescription
                     .getDoctor().getId());
-            statement.setDate(4, updatedPrescription
+            statement.setDate(4, newPrescription
                     .getDateCreated());
-            statement.setDate(5, updatedPrescription
+            statement.setDate(5, newPrescription
                     .getExpirationDate());
-            statement.setString(6, updatedPrescription
+            statement.setString(6, newPrescription
                     .getPriority().toString());
             statement.setLong(7, oldPrescription.getId());
             statement.executeUpdate();
@@ -134,6 +174,15 @@ public class PrescriptionDao implements Dao<Prescription> {
         }
     }
 
+    /**
+     * Метод для удаления рецепта из БД. Если отлавливается SQLException,
+     * то в консоль выводится его сообщение
+     *
+     * @param prescription - рецепт, который будет удалён из БД
+     * @see SQLException
+     * @see PrescriptionAvailabilityException
+     * @see com.haulmont.testtask.model.prescription.Prescription
+     */
     @Override
     public void delete(Prescription prescription) {
         String sql = "DELETE FROM prescription where id = ?;";
@@ -146,6 +195,18 @@ public class PrescriptionDao implements Dao<Prescription> {
         }
     }
 
+
+    /**
+     * Метод для получения количества рецептов, выписанных каждым из докторов.
+     * Если отлавливается SQLException, то в консоль выводится его сообщение
+     *
+     * @return Словарь с ключом {@link Doctor} и значением {@link Long},
+     * где ключом является доктор, а значением является количество
+     * рецептов, выписанных им
+     * @see SQLException
+     * @see Doctor
+     * @see Long
+     */
     public Map<Doctor, Long> getQuantityOfPrescriptions() {
         String sql = "SELECT doctor_id, COUNT(DISTINCT id) as prescriptions_num " +
                 "FROM prescription GROUP BY doctor_id";

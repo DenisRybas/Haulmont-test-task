@@ -11,19 +11,53 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * View списка докторов
+ *
+ * @see Doctor
+ */
 public class DoctorsListViewImpl extends Window implements DoctorsListView,
         Button.ClickListener {
+
+    /**
+     * Список {@link DoctorsListViewListener},
+     */
     private List<DoctorsListViewListener> listeners;
+
+    /**
+     * Основной layout для view списка докторов
+     */
     private VerticalLayout layout;
+
+    /**
+     * Таблица, в которой находятся доктора
+     */
     private Grid<Doctor> table;
+
+    /**
+     * Список докторов
+     */
     private List<Doctor> doctors;
+
+    /**
+     * Словарь, связывающий {@link DoctorListButtons} - название кнопки
+     * и саму кнопку
+     */
     private Map<DoctorListButtons, Button> buttons;
 
+    /**
+     * Пустой конструктор для создания view списка докторов
+     * Вызывает методы создания компонентов view
+     * и создания Listener'ов для этих компонентов
+     */
     public DoctorsListViewImpl() {
         createComponents();
         createListeners();
     }
 
+    /**
+     * Создаёт компоненты для View
+     */
     private void createComponents() {
         layout = new VerticalLayout();
         table = new Grid<>();
@@ -61,6 +95,9 @@ public class DoctorsListViewImpl extends Window implements DoctorsListView,
         layout.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_CENTER);
     }
 
+    /**
+     * Создаёт Listener'ы для компонентов View
+     */
     private void createListeners() {
         listeners = new ArrayList<>();
         table.addSelectionListener(event -> {
@@ -74,27 +111,55 @@ public class DoctorsListViewImpl extends Window implements DoctorsListView,
         });
     }
 
+    /**
+     * @return значение выбранного в таблице доктора
+     */
     public Doctor getSelectedTableItem() {
         return table.asSingleSelect().getValue();
     }
 
+    /**
+     * Перезагружает таблицу
+     */
     public void refreshTable() {
         table.getDataProvider().refreshAll();
     }
 
+    /**
+     * @param doctor - доктор для добавления в {@link #doctors}
+     */
     public void addDoctor(Doctor doctor) {
         doctors.add(doctor);
     }
 
+    /**
+     * @param doctor - доктор для удаления из {@link #doctors}
+     */
     public void removeDoctor(Doctor doctor) {
         doctors.remove(doctor);
     }
 
+    /**
+     * Добавляет {@link DoctorsListViewListener} в {@link #listeners}
+     *
+     * @param listener -  {@link DoctorsListViewListener},
+     *                 отслеживающий действия c {@link DoctorsListView}
+     * @see DoctorsListView
+     * @see DoctorsListViewListener
+     */
     @Override
     public void addListener(DoctorsListViewListener listener) {
         listeners.add(listener);
     }
 
+    /**
+     * Отслеживает нажатие кнопки, определяет, какая кнопка была нажата,
+     * после чего {@link DoctorsListViewListener} этой кнопки обрабатывает
+     * нажатие
+     *
+     * @param clickEvent - событие нажатия на кнопку
+     * @see DoctorsListViewListener
+     */
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
         for (DoctorsListViewListener listener : listeners)

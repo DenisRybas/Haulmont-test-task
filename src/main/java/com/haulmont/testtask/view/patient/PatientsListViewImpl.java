@@ -11,19 +11,53 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * View списка пациентов
+ *
+ * @see Patient
+ */
 public class PatientsListViewImpl extends Window
         implements PatientsListView, Button.ClickListener {
+
+    /**
+     * Список {@link PatientsListViewListener},
+     */
     private List<PatientsListViewListener> listeners;
+
+    /**
+     * Основной layout для view списка пациентов
+     */
     private GridLayout layout;
+
+    /**
+     * Таблица, в которой находятся пациенты
+     */
     private Grid<Patient> table;
+
+    /**
+     * Список пациентов
+     */
     private List<Patient> patients;
+
+    /**
+     * Словарь, связывающий {@link PatientListButtons} - название кнопки
+     * и саму кнопку
+     */
     private Map<PatientListButtons, Button> buttons;
 
+    /**
+     * Пустой конструктор для создания view списка пациентов
+     * Вызывает методы создания компонентов view
+     * и создания Listener'ов для этих компонентов
+     */
     public PatientsListViewImpl() {
         createComponents();
         createListeners();
     }
 
+    /**
+     * Создаёт компоненты для View
+     */
     private void createComponents() {
         layout = new GridLayout();
         table = new Grid<>();
@@ -63,6 +97,9 @@ public class PatientsListViewImpl extends Window
         layout.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_CENTER);
     }
 
+    /**
+     * Создаёт Listener'ы для компонентов View
+     */
     private void createListeners() {
         listeners = new ArrayList<>();
         table.addSelectionListener(event -> {
@@ -76,27 +113,55 @@ public class PatientsListViewImpl extends Window
         });
     }
 
-    public void refreshTable() {
-        table.getDataProvider().refreshAll();
-    }
-
+    /**
+     * @return значение выбранного в таблице пациента
+     */
     public Patient getSelectedTableItem() {
         return table.asSingleSelect().getValue();
     }
 
+    /**
+     * Перезагружает таблицу
+     */
+    public void refreshTable() {
+        table.getDataProvider().refreshAll();
+    }
+
+    /**
+     * @param patient - пациент для добавления в {@link #patients}
+     */
     public void addPatient(Patient patient) {
         patients.add(patient);
     }
 
+    /**
+     * @param patient - пациент для удаления из {@link #patients}
+     */
     public void removePatient(Patient patient) {
         patients.remove(patient);
     }
 
+    /**
+     * Добавляет {@link PatientsListViewListener} в {@link #listeners}
+     *
+     * @param listener -  {@link PatientsListViewListener},
+     *                 отслеживающий действия c {@link PatientsListView}
+     * @see PatientsListView
+     * @see PatientsListViewListener
+     */
     @Override
     public void addListener(PatientsListViewListener listener) {
         listeners.add(listener);
     }
 
+    /**
+     * Отслеживает нажатие кнопки, определяет, какая кнопка была нажата,
+     * после чего {@link PatientsListViewListener} этой кнопки обрабатывает
+     * нажатие
+     *
+     * @param clickEvent - событие нажатия на кнопку
+     * @see PatientsListViewListener
+     */
     @Override
     public void buttonClick(Button.ClickEvent clickEvent) {
         for (PatientsListViewListener listener : listeners)

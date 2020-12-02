@@ -7,6 +7,9 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
+/**
+ * Главный UI - класс
+ */
 @Theme(ValoTheme.THEME_NAME)
 public class MainUI extends UI {
 

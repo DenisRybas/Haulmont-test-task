@@ -6,6 +6,7 @@ import com.haulmont.testtask.model.patient.Patient;
 import com.haulmont.testtask.model.patient.PatientDao;
 import com.haulmont.testtask.model.prescription.Prescription;
 import com.haulmont.testtask.model.prescription.PrescriptionDao;
+import com.haulmont.testtask.view.CreateUpdate;
 import com.vaadin.data.Binder;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.ui.*;
@@ -15,22 +16,99 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Окно создания/изменения рецепта
+ *
+ * @see Prescription
+ */
 public class PrescriptionWindow extends Window {
+
+    /**
+     * TextField для описания рецепта
+     */
     private TextField description;
+
+    /**
+     * ComboBox для выбора пациента
+     */
     private ComboBox<Long> patientComboBox;
+
+    /**
+     * ComboBox для выбора доктора
+     */
     private ComboBox<Long> doctorComboBox;
+
+    /**
+     * ComboBox для выбора {@link PrescriptionPriority}
+     *
+     * @see PrescriptionPriority
+     */
     private ComboBox<PrescriptionPriority> priorityComboBox;
-    private DateField dateCreated, expirationDate;
+
+    /**
+     * DateField для выбора даты начала срока действия рецепта
+     */
+    private DateField dateCreated;
+
+    /**
+     * DateField для выбора даты окончания срока действия рецепта
+     */
+    private DateField expirationDate;
+
+    /**
+     * Binder для рецепта, определяет валидность введённых данных
+     */
     private Binder<Prescription> binder;
-    private Button okButton, cancelButton;
-    private PrescriptionsListViewImpl prescriptionsList;
+
+    /**
+     * Кнопка ОК
+     */
+    private Button okButton;
+
+    /**
+     * Кнопка отмены
+     */
+    private Button cancelButton;
+
+    /**
+     * View списка рецептов
+     *
+     * @see PrescriptionsListViewImpl
+     */
+    private PrescriptionsListViewImpl prescriptionsListView;
+
+    /**
+     * Режим создания/изменения рецепта
+     *
+     * @see CreateUpdate
+     */
     private CreateUpdate mode;
+
+    /**
+     * Класс, реализующий CRUD - методы для сущности {@link Patient},
+     *
+     * @see PatientDao
+     */
     private PatientDao patientDao;
+
+    /**
+     * Класс, реализующий CRUD - методы для сущности {@link Doctor},
+     *
+     * @see DoctorDao
+     */
     private DoctorDao doctorDao;
 
+    /**
+     * Конструктор для создания окна создания/изменения рецепта
+     * Вызывает методы создания компонентов окна
+     * и создания Listener'ов для этих компонентов
+     *
+     * @param prescriptionsListView - view списка рецептов
+     * @param mode                  - режим создания/изменения рецептов
+     */
     public PrescriptionWindow(PrescriptionsListViewImpl
-                                      prescriptionsList, CreateUpdate mode) {
-        this.prescriptionsList = prescriptionsList;
+                                      prescriptionsListView, CreateUpdate mode) {
+        this.prescriptionsListView = prescriptionsListView;
         this.mode = mode;
         patientDao = new PatientDao();
         doctorDao = new DoctorDao();
@@ -38,6 +116,9 @@ public class PrescriptionWindow extends Window {
         createListeners();
     }
 
+    /**
+     * Создаёт компоненты для окна создания/изменения рецепта
+     */
     private void createComponents() {
         HorizontalLayout content = new HorizontalLayout();
         binder = new Binder<>(Prescription.class);
@@ -88,7 +169,7 @@ public class PrescriptionWindow extends Window {
                 expirationDate.setRangeStart(dateCreated.getValue()));
 
         if (mode == CreateUpdate.UPDATE) {
-            Prescription selectedItem = prescriptionsList.getSelectedTableItem();
+            Prescription selectedItem = prescriptionsListView.getSelectedTableItem();
             description.setValue(selectedItem.getDescription());
             patientComboBox.setValue(selectedItem.getPatient().getId());
             doctorComboBox.setValue(selectedItem.getDoctor().getId());
@@ -107,6 +188,9 @@ public class PrescriptionWindow extends Window {
         this.setContent(content);
     }
 
+    /**
+     * Создаёт Listener'ы для окна создания/изменения рецепта
+     */
     private void createListeners() {
         okButton.addClickListener(e -> {
             if (binder.isValid()) {
@@ -120,9 +204,9 @@ public class PrescriptionWindow extends Window {
                 PrescriptionDao prescriptionDao = new PrescriptionDao();
                 if (mode == CreateUpdate.CREATE) {
                     prescriptionDao.save(prescription);
-                    prescriptionsList.addPrescription(prescription);
+                    prescriptionsListView.addPrescription(prescription);
                 } else {
-                    Prescription prescriptionToUpd = prescriptionsList
+                    Prescription prescriptionToUpd = prescriptionsListView
                             .getSelectedTableItem();
 
                     prescriptionDao.update(prescriptionToUpd,
@@ -140,7 +224,7 @@ public class PrescriptionWindow extends Window {
                     prescriptionToUpd.setPriority(
                             prescription.getPriority());
                 }
-                prescriptionsList.refreshTable();
+                prescriptionsListView.refreshTable();
                 close();
             }
         });

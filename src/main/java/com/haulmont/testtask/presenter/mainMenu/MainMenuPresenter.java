@@ -14,18 +14,39 @@ import com.haulmont.testtask.view.patient.PatientsListViewImpl;
 import com.haulmont.testtask.view.mainMenu.MainMenuViewImpl;
 import com.haulmont.testtask.view.prescription.PrescriptionsListViewImpl;
 
+/**
+ * Главное меню приложения
+ */
 public class MainMenuPresenter implements MainMenuViewListener {
+
+    /**
+     * View главного меню
+     */
     private MainMenuViewImpl view;
 
+    /**
+     * @param view - view главного меню
+     */
     public MainMenuPresenter(MainMenuViewImpl view) {
         this.view = view;
         view.addListener(this);
     }
 
+    /**
+     * @return view главного меню
+     */
     public MainMenuViewImpl getView() {
         return view;
     }
 
+    /**
+     * Определяет, какие действия будут происходить
+     * при нажатии заданной кнопки
+     *
+     * @param nameOfButton название кнопки, полученное из
+     *                     {@link MainMenuButtons}
+     * @see MainMenuButtons
+     */
     @Override
     public void buttonClick(MainMenuButtons nameOfButton) {
         switch (nameOfButton) {

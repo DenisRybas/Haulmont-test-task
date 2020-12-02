@@ -6,17 +6,49 @@ import com.vaadin.ui.*;
 
 import java.util.*;
 
+/**
+ * Таблица с докторами и количеством выписанных ими рецептов
+ *
+ * @see Doctor
+ * @see com.haulmont.testtask.model.prescription.Prescription
+ */
 public class DoctorStatisticsWindow extends Window {
+
+    /**
+     * Основной layout для view списка докторов
+     */
     private VerticalLayout layout;
+
+    /**
+     * Таблица, в которой находятся доктора и их статистика
+     */
     private Grid<Doctor> table;
+
+    /**
+     * Словарь, связывающий доктора с его id
+     */
     private Map<Doctor, Long> doctors;
+
+    /**
+     * Кнопка ОК
+     */
     private Button ok;
 
+    /**
+     * Пустой конструктор для создания таблицы докторов
+     * и количества выписанных ими рецептов
+     * Вызывает методы создания компонентов этой таблицы
+     * и создания Listener'ов для этих компонентов
+     */
     public DoctorStatisticsWindow() {
         createComponents();
         createListeners();
     }
 
+    /**
+     * Создаёт компоненты для таблицы докторов
+     * и количества выписанных ими рецептов
+     */
     private void createComponents() {
         layout = new VerticalLayout();
         table = new Grid<>();
@@ -44,6 +76,10 @@ public class DoctorStatisticsWindow extends Window {
         layout.setComponentAlignment(buttonsLayout, Alignment.BOTTOM_CENTER);
     }
 
+    /**
+     * Создаёт Listener'ы для компонентов таблицы докторов
+     * и количества выписанных ими рецептов
+     */
     private void createListeners() {
         ok.addClickListener(event -> this.close());
     }

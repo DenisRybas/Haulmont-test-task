@@ -2,6 +2,7 @@ package com.haulmont.testtask.view.doctor;
 
 import com.haulmont.testtask.model.doctor.Doctor;
 import com.haulmont.testtask.model.doctor.DoctorDao;
+import com.haulmont.testtask.view.CreateUpdate;
 import com.vaadin.data.Binder;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
@@ -10,20 +11,80 @@ import com.vaadin.ui.Window;
 
 import java.util.regex.Pattern;
 
+/**
+ * Окно создания/изменения доктора
+ *
+ * @see Doctor
+ */
 public class DoctorWindow extends Window {
-    private TextField name, surname, patronymic, specialization;
+
+    /**
+     * TextField для имени доктора
+     */
+    private TextField name;
+
+    /**
+     * TextField для фамилии доктора
+     */
+    private TextField surname;
+
+    /**
+     * TextField для отчества доктора
+     */
+    private TextField patronymic;
+
+    /**
+     * TextField для специализации доктора
+     */
+    private TextField specialization;
+
+    /**
+     * Binder для доктора, определяет валидность введённых данных
+     */
     private Binder<Doctor> binder;
-    private Button okButton, cancelButton;
-    private DoctorsListViewImpl doctorsList;
+
+    /**
+     * Кнопка ОК
+     */
+    private Button okButton;
+
+    /**
+     * Кнопка отмены
+     */
+    private Button cancelButton;
+
+    /**
+     * View списка докторов
+     *
+     * @see DoctorsListViewImpl
+     */
+    private DoctorsListViewImpl doctorsListView;
+
+    /**
+     * Режим создания/изменения доктора
+     *
+     * @see CreateUpdate
+     */
     private CreateUpdate mode;
 
-    public DoctorWindow(DoctorsListViewImpl doctorsList, CreateUpdate mode) {
-        this.doctorsList = doctorsList;
+    /**
+     * Конструктор для создания окна создания/изменения доктора
+     * Вызывает методы создания компонентов окна
+     * и создания Listener'ов для этих компонентов
+     *
+     * @param doctorsListView - view списка докторов
+     * @param mode            - режим создания/изменения доктора
+     */
+    public DoctorWindow(DoctorsListViewImpl doctorsListView, CreateUpdate mode) {
+        this.doctorsListView = doctorsListView;
         this.mode = mode;
         createComponents();
         createListeners();
     }
 
+    /**
+     * Создаёт компоненты для окна создания/изменения доктора
+     */
     private void createComponents() {
         HorizontalLayout content = new HorizontalLayout();
         binder = new Binder<>(Doctor.class);
@@ -61,7 +122,7 @@ public class DoctorWindow extends Window {
                 .bind(Doctor::getSpecialization, Doctor::setSpecialization);
 
         if (mode == CreateUpdate.UPDATE) {
-            Doctor doctor = doctorsList.getSelectedTableItem();
+            Doctor doctor = doctorsListView.getSelectedTableItem();
             name.setValue(doctor.getName());
             surname.setValue(doctor.getSurname());
             patronymic.setValue(doctor.getPatronymic());
@@ -77,6 +138,9 @@ public class DoctorWindow extends Window {
         this.setContent(content);
     }
 
+    /**
+     * Создаёт Listener'ы для окна создания/изменения доктора
+     */
     private void createListeners() {
         okButton.addClickListener(e -> {
             if (binder.isValid()) {
@@ -85,16 +149,16 @@ public class DoctorWindow extends Window {
                 DoctorDao doctorDao = new DoctorDao();
                 if (mode == CreateUpdate.CREATE) {
                     doctorDao.save(doctor);
-                    doctorsList.addDoctor(doctor);
+                    doctorsListView.addDoctor(doctor);
                 } else {
-                    Doctor doctorToUpd = doctorsList.getSelectedTableItem();
+                    Doctor doctorToUpd = doctorsListView.getSelectedTableItem();
                     doctorDao.update(doctorToUpd, doctor);
                     doctorToUpd.setName(doctor.getName());
                     doctorToUpd.setSurname(doctor.getSurname());
                     doctorToUpd.setPatronymic(doctor.getPatronymic());
                     doctorToUpd.setSpecialization(doctor.getSpecialization());
                 }
-                doctorsList.refreshTable();
+                doctorsListView.refreshTable();
                 close();
             }
         });
